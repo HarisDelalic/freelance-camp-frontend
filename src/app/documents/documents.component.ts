@@ -1,27 +1,32 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Document } from './document';
+import { DocumentService } from './document.service';
+import { interval } from 'rxjs';
 
 @Component({
 	selector: 'documents',
 	templateUrl: 'documents.component.html'
 })
 
-export class DocumentsComponent {
-  pageTitle: string = "Documents dashboard";
-  documents: Document[] = [
-    {
-      title: "dela_title",
-	  description: "dela_desc",
-	  file_url: "dela.com",
-	  updated_at: "11/11/16",
-	  image_url: "dela.com",
-    },
-    {
-      title: "dela_2_title",
-	  description: "dela_2_desc",
-	  file_url: "dela_2.com",
-	  updated_at: "12/12/16",
-	  image_url: "dela_2.com",
-    }
-  ]
+export class DocumentsComponent implements OnInit, OnDestroy {
+  documents: Document[];
+  sub: Subscription;
+
+  private refreshInterval = interval(1000);
+
+  constructor(private documentService: DocumentService) { }
+
+  ngOnInit() {
+    this.sub = this.refreshInterval.subscribe(()=> this.getDocuments());
+  }
+
+  getDocuments(): void {
+    this.documentService.getDocuments()
+      .subscribe(documents => this.documents = documents);
+  }
+
+  ngOnDestroy() {
+    this.sub.unsubscribe();
+  }
+
 }

@@ -1,5 +1,8 @@
-import { Component, OnInit } from '@angular/core'
-import { ActivatedRoute, Params } from '@angular/router'
+import { Component, OnInit, Input } from '@angular/core';
+import { Location } from '@angular/common';
+import { ActivatedRoute, Params } from '@angular/router';
+import { ProposalService } from './proposal.service';
+import { mergeMap } from 'rxjs/operators';
 
 @Component({
 	selector: 'proposal-show',
@@ -7,19 +10,24 @@ import { ActivatedRoute, Params } from '@angular/router'
 })
 
 export class ProposalShowComponent implements OnInit {
-	id: number;
-	routeId: any;
 
 	constructor(
-		private route: ActivatedRoute
+		private route: ActivatedRoute,
+		private location: Location,
+		private proposalService: ProposalService
 	) {}
 
+    @Input() 
+    proposal: Proposal
+
 	ngOnInit(): void {
-		this.routeId = this.route.params.subscribe(
-			params => {
-				this.id = +params['id'];
-			  }
-			)
+		this.getProposal();
+	}
+
+	getProposal() {
+		const id = +this.route.snapshot.paramMap.get('id');
+		return this.proposalService.getProposal(id)
+          .subscribe(proposal => this.proposal = proposal)
 	}
 
 }

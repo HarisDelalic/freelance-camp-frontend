@@ -1,16 +1,13 @@
-{{ pageTitle }}
-<hr>
+<div class="container">
 <div *ngFor="let document of documents">
-  {{ document.title }}<br />
-  <em>{{ document.description }}</em><br /><br />
-  <div>
-    <a href="{{ document.file_url }}">Download file</a>
+<div class="card" style="margin-top: 35px;">
+  <img class="card-img-top" src={{document.image_url}} alt="Card image cap">
+  <div class="card-body">
+    <h5 class="card-title">{{document.title}}</h5>
+    <p class="card-text">{{document.description}}</p>
+    <a class="btn btn-lg btn-primary" href="{{ document.file_url }}">Download file</a>
+    <p class="card-text"><small class="text-muted">{{ document.updated_at | date }}</small></p>
   </div>
-  <p>
-  	{{ document.updated_at }}
-  </p>
-  <p>
-  	{{ document.image_url }}
-  </p>
-  <hr>
+</div>
+</div>
 </div>
